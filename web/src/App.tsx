@@ -31,7 +31,7 @@ function App() {
   }, [])
 
   //tentar fazer ser resposivo 
-  //user radix para fazer o select
+  //user radix para fazer o select, feito
   //fazer validação dos dados, usar o react hook form na seção de schema validation, ensinando a usar o zod(biblioteca de validação) no front-end 
   //tentar fazer carrosel com os cards, utilizar biblioteca keen-slider
   return(

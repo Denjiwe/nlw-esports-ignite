@@ -6,16 +6,27 @@ import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { Check, GameController } from "phosphor-react";
 import { Input } from "./Form/Input";
 import axios from "axios";
+import { ChevronDownIcon } from '@radix-ui/react-icons';
+import { gray } from '@radix-ui/colors';
+import { styled } from "@stitches/react";
 
 interface Game{
     id: string;
     title: string;
 }
 
+const StyledTrigger = styled(Select.Trigger, { 
+  '&[data-placeholder]': {color: gray.gray11},
+ })
+
+export const SelectTrigger = StyledTrigger;
+
 export function CreateAdModel() {
     const [games, setGames] = useState<Game[]>([])
     const [weekDays, setWeekDays] = useState<string[]>([])
     const [useVoiceChannel, setUseVoiceChannel] = useState(false)
+    
+
     
   useEffect(() => {
     axios('http://localhost:3333/games')
@@ -53,6 +64,7 @@ export function CreateAdModel() {
 }
 
     return (
+
         <Dialog.Portal>
           <Dialog.Overlay className="bg-black/60 inset-0 fixed"/>
 
@@ -61,35 +73,45 @@ export function CreateAdModel() {
 
               <form onSubmit={handleCreateAd} className="mt-8 flex flex-col gap-4">
                 <div className="flex flex-col gap-2">
-                  <label htmlFor="game" className="font-semibold">Qual o game?</label>
-                  <select 
-                    id="game"
-                    name="game"
-                    className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500 appearance-none"
-                  >
-                    <option disabled selected value="">Selecione o game que deseja jogar</option>
+                  <label>Qual o game?</label>
+                  <Select.Root >
+                  <SelectTrigger onLoadStart={StyledTrigger} className="bg-zinc-900 py-3 px-4 justify-left flex rounded text-sm">
+                    <Select.SelectValue placeholder={`Selecione o game que deseja jogar `} />
+                    <Select.SelectIcon className="absolute mx-80 px-9">
+                      <ChevronDownIcon/>
+                    </Select.SelectIcon>
 
-                    { games.map(game => { return <option key={game.id} value={game.id}>{game.title}</option> })}
-                  </select>               
+                  </SelectTrigger>
+                  <Select.SelectContent  id="game" className="bg-zinc-900 cursor-default rounded mt-9 py-1 px-2 text-sm w-[25rem]">
+
+                    { games.map(game => { 
+                      return (
+                        <Select.SelectItem className="hover:bg-zinc-700 rounded py-1 px-2"key={game.id} value={game.id}>
+                          <Select.SelectItemText >{game.title}</Select.SelectItemText>
+
+                        </Select.SelectItem> 
+                      )})}
+                  </Select.SelectContent>
+                  </Select.Root>             
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="name">Seu nome (ou nickname)</label>
                   <Input id="name"
-                  name="name" placeholder="Como te chamam dentro do game?" className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"/>
+                  name="name" placeholder="Como te chamam dentro do game?" />
                 </div>
 
                 <div className="grid grid-cols-2 gap-6">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="yearsPlaying">Joga há quantos anos?</label>
                     <Input id="yearsPlaying"
-                    name="yearsPlaying" type="nunber" placeholder="Tudo bem ser ZERO" className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"/>
+                    name="yearsPlaying" type="nunber" placeholder="Tudo bem ser ZERO"/>
                   </div>
 
                   <div className="flex flex-col gap-2">
                     <label htmlFor="discord">Qual seu Discord?</label>
                     <Input id="discord"
-                    name="discord" placeholder="Usuário#0000" className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"/>
+                    name="discord" placeholder="Usuário#0000"/>
                   </div>
                 </div>
 
@@ -161,9 +183,9 @@ export function CreateAdModel() {
                     <label htmlFor="hourStart">Qual horário do dia?</label>
                     <div className="grid grid-cols-2 gap-2">
                       <Input id="hourStart"
-                      name="hourStart" type="time" placeholder="De" className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"/>
+                      name="hourStart" type="time" placeholder="De"/>
                       <Input id="hourEnd"
-                      name="hourEnd" type="time" placeholder="Até" className="bg-zinc-900 py-3 px-4 rounded text-sm placeholder:text-zinc-500"/>
+                      name="hourEnd" type="time" placeholder="Até"/>
                     </div>
                   </div>
                 </div>
